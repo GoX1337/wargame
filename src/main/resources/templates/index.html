@@ -16,8 +16,8 @@
   </head>
   <body>
     <div id="app">
-      <batalion-comp id="1" posX="0" posY="0"></batalion-comp>
-      <batalion-comp id="2" posX="230" posY="0"></batalion-comp>
+      <batalion-comp th:each="batalion : ${batalions}" th:id="${batalion.id}" th:posX="${batalion.x}" th:posY="${batalion.y}">
+      </batalion-comp>
     </div>
   </body>
 </html>
