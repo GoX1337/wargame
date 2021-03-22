@@ -16,5 +16,6 @@ public class BatalionCommandLineRunner implements CommandLineRunner {
     public void run(String... args) throws Exception {
         batalionRepository.save(new Batalion(0, 0));
         batalionRepository.save(new Batalion(230, 0));
+        batalionRepository.save(new Batalion(128, 145));
     }
 }

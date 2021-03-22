@@ -10,9 +10,8 @@ import java.util.UUID;
 @Setter
 @ToString
 public class Position {
-
     private UUID id;
     private int x;
     private int y;
-
+    private Status status;
 }

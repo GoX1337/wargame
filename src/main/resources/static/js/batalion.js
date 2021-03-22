@@ -44,7 +44,7 @@ class Batalion extends HTMLElement {
         };
     }
 
-    move(x, y){
+    move(x, y, status){
         let node = this.shadowRoot.querySelector('#batalion');
         let newX = x - (this.offset.x);
         let newY = y - (this.offset.y);
@@ -57,18 +57,19 @@ class Batalion extends HTMLElement {
         sendMessage({
             id: this.getAttribute('id'),
             x: newX,
-            y: newY
+            y: newY,
+            status: status
         });
         this.shadowRoot.querySelector('#pos').innerHTML = "(" + newX + ", " + newY + ")";
     }
 
     drag(ev) {
-        this.move(ev.clientX, ev.clientY);
+        this.move(ev.clientX, ev.clientY, "MOVE");
     }
 
     dragend(ev) {
         console.log("dragend");
-        this.move(ev.clientX, ev.clientY);
+        this.move(ev.clientX, ev.clientY, "MOVED");
         this.position = null;
         this.offset = null;
     }
