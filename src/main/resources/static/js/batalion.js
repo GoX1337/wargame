@@ -54,6 +54,11 @@ class Batalion extends HTMLElement {
         node.style.top = newY + 'px';
         this.setAttribute('posX', newX);
         this.setAttribute('posY', newY);
+        sendMessage({
+            id: this.getAttribute('id'),
+            x: newX,
+            y: newY
+        });
         this.shadowRoot.querySelector('#pos').innerHTML = "(" + newX + ", " + newY + ")";
     }
 

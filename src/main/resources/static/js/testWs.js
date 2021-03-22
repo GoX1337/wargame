@@ -8,7 +8,7 @@ function setConnected(connected) {
 }
 
 function connect() {
-    stompClient = Stomp.client('ws://172.22.196.28:8080/chat');
+    stompClient = Stomp.client('ws://172.22.196.28:8080/testWs');
     stompClient.connect({}, function(frame) {
         setConnected(true);
         console.log('Connected: ' + frame);
