@@ -5,6 +5,7 @@ const wsSourceId = uuid();
 
 function connect() {
     stompClient = Stomp.client('ws://' + location.host + '/position');
+    stompClient.debug = null;
     stompClient.connect({}, function(frame) {
         stompClient.subscribe('/topic/position', function(msg) {
             let positionUpdate = JSON.parse(msg.body);
