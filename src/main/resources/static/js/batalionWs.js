@@ -1,8 +1,13 @@
 var stompClient = null;
 
 function connect() {
-    stompClient = Stomp.client('ws://172.22.196.28:8080/position');
+    stompClient = Stomp.client('ws://' + location.host + '/position');
     stompClient.connect({}, function(frame) {
+        stompClient.subscribe('/topic/position', function(msg) {
+            let positionUpdate = JSON.parse(msg.body);
+            console.log("update", positionUpdate);
+            document.getElementById(positionUpdate.id)
+        });
         console.log('Connected: ' + frame);
     });
 }

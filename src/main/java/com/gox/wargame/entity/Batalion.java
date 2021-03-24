@@ -18,9 +18,7 @@ public class Batalion {
     @Id
     @GeneratedValue
     private UUID id;
-
     private int x;
-
     private int y;
 
     public Batalion(){}

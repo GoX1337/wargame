@@ -87,6 +87,10 @@ class Batalion extends HTMLElement {
         node.addEventListener('drag', (ev) => this.drag(ev));
         node.addEventListener('dragstart', (ev) => this.dragstart(ev));
         node.addEventListener('dragend', (ev) => this.dragend(ev));
+
+        node.addEventListener("position-update-" + this.getAttribute('id'), function (e) {
+            console.log(e);
+        });
     }
 
     disconnectedCallback() {

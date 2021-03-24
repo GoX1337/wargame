@@ -24,7 +24,8 @@ public class MessageHandlerController {
     private BatalionRepository batalionRepository;
 
     @MessageMapping("/position")
-    public void sendPosition(Position pos) throws Exception {
+    @SendTo("/topic/position")
+    public Position sendPosition(Position pos) throws Exception {
         log.info("/position message received: " + pos);
         if(Status.MOVED.equals(pos.getStatus())){
             batalionRepository
@@ -37,6 +38,7 @@ public class MessageHandlerController {
                 }
             );
         }
+        return pos;
     }
 
     @MessageMapping("/chat")
