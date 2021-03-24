@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import javax.persistence.Transient;
 import java.util.UUID;
 
 @Getter
@@ -11,8 +12,10 @@ import java.util.UUID;
 @ToString
 public class Position {
     private UUID id;
-    private UUID eventSource;
     private int x;
     private int y;
     private Status status;
+
+    @Transient
+    private UUID eventSource;
 }
