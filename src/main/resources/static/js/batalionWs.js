@@ -6,11 +6,14 @@ const wsSourceId = uuid();
 function connect() {
     stompClient = Stomp.client('ws://' + location.host + '/position');
     stompClient.debug = null;
-    stompClient.connect({}, function(frame) {
-        stompClient.subscribe('/topic/position', function(msg) {
+    stompClient.connect({}, (frame) => {
+        stompClient.subscribe('/topic/position', (msg) => {
             let positionUpdate = JSON.parse(msg.body);
-            console.log("update", positionUpdate);
-            document.getElementById(positionUpdate.id)
+            if(wsSourceId !== positionUpdate.eventSource){
+                let eventMsg = { bubbles: true, composed: true, detail: positionUpdate };
+                let event = new CustomEvent('position-update-' + positionUpdate.id, eventMsg);
+                document.getElementById(positionUpdate.id).dispatchEvent(event);
+            }
         });
         console.log('Connected: ' + frame);
     });

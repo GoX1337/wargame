@@ -44,7 +44,10 @@ class Batalion extends HTMLElement {
         };
     }
 
-    move(x, y, status){
+    move(x, y, status, isFromOtherClient){
+
+        console.log(status === "MOVE" ? "MOVE" : "MOVED", x, y, status, this.offset);
+
         let node = this.shadowRoot.querySelector('#batalion');
         let newX = x - (this.offset.x);
         let newY = y - (this.offset.y);
@@ -54,24 +57,25 @@ class Batalion extends HTMLElement {
         node.style.top = newY + 'px';
         this.setAttribute('posX', newX);
         this.setAttribute('posY', newY);
-        sendMessage({
-            id: this.getAttribute('id'),
-            x: newX,
-            y: newY,
-            status: status
-        });
+
+        if(!isFromOtherClient){
+            sendMessage({
+                id: this.getAttribute('id'),
+                position: { x: newX, y: newY},
+                offset: { x: this.offset.x, y: this.offset.y},
+                status: status
+            });
+        }
         this.shadowRoot.querySelector('#pos').innerHTML = "(" + newX + ", " + newY + ")";
     }
 
     drag(ev) {
-        this.move(ev.clientX, ev.clientY, "MOVE");
+        this.move(ev.clientX, ev.clientY, "MOVE", false);
     }
 
     dragend(ev) {
         console.log("dragend");
-        this.move(ev.clientX, ev.clientY, "MOVED");
-        this.position = null;
-        this.offset = null;
+        this.move(ev.clientX, ev.clientY, "MOVED", false);
     }
 
     connectedCallback() {
@@ -88,9 +92,16 @@ class Batalion extends HTMLElement {
         node.addEventListener('dragstart', (ev) => this.dragstart(ev));
         node.addEventListener('dragend', (ev) => this.dragend(ev));
 
-        node.addEventListener("position-update-" + this.getAttribute('id'), function (e) {
-            console.log(e);
+        this.addEventListener("position-update-" + this.getAttribute('id'), (msg) => {
+            console.log("update position from external source");
+            let update = msg.detail;
+            console.log(update);
+            this.offset = update.offset;
+            this.move(update.position.x, update.position.y, update.status, true);
         });
+
+        this.position = { x, y };
+        this.offset = { x, y };
     }
 
     disconnectedCallback() {

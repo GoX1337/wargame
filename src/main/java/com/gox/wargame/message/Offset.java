@@ -7,7 +7,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class Position {
+public class Offset {
     private int x;
     private int Y;
 }
