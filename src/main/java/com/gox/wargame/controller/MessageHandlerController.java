@@ -24,8 +24,8 @@ public class MessageHandlerController {
             batalionRepository
                 .findById(msg.getId())
                 .ifPresent(b -> {
-                    b.setX(msg.getPosition().getX());
-                    b.setY(msg.getPosition().getY());
+                    b.setX(msg.getPosition().getX() - msg.getOffset().getX());
+                    b.setY(msg.getPosition().getY() - msg.getOffset().getY());
                     batalionRepository.save(b);
                     log.info("Update batalion " + b);
                 }
