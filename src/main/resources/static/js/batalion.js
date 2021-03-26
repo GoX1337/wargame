@@ -42,12 +42,16 @@ class Batalion extends HTMLElement {
             x: ev.offsetX,
             y: ev.offsetY
         };
+
+        sendMessage("/topic/drag/start", {
+            id: this.getAttribute('id'),
+            position: this.position,
+            offset: this.offset
+        });
     }
 
     move(x, y, status, isFromOtherClient){
-
         console.log(status === "MOVE" ? "MOVE" : "MOVED", x, y, status, this.offset);
-
         let node = this.shadowRoot.querySelector('#batalion');
         let newX = x - (this.offset.x);
         let newY = y - (this.offset.y);
@@ -59,9 +63,9 @@ class Batalion extends HTMLElement {
         this.setAttribute('posY', newY);
 
         if(!isFromOtherClient){
-            sendMessage({
+            sendMessage("/app/position", {
                 id: this.getAttribute('id'),
-                position: { x: newX, y: newY},
+                position: { x: x, y: y},
                 offset: { x: this.offset.x, y: this.offset.y},
                 status: status
             });
@@ -100,8 +104,11 @@ class Batalion extends HTMLElement {
             this.move(update.position.x, update.position.y, update.status, true);
         });
 
-        this.position = { x, y };
-        this.offset = { x, y };
+        this.addEventListener("drag-start-" + this.getAttribute('id'), (msg) => {
+            console.log("drag-start", msg.detail);
+            this.position = msg.detail.position;
+            this.offset = msg.detail.offset;
+        });
     }
 
     disconnectedCallback() {

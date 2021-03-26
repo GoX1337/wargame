@@ -7,6 +7,7 @@ function connect() {
     stompClient = Stomp.client('ws://' + location.host + '/position');
     stompClient.debug = null;
     stompClient.connect({}, (frame) => {
+
         stompClient.subscribe('/topic/position', (msg) => {
             let positionUpdate = JSON.parse(msg.body);
             if(wsSourceId !== positionUpdate.eventSource){
@@ -15,6 +16,16 @@ function connect() {
                 document.getElementById(positionUpdate.id).dispatchEvent(event);
             }
         });
+
+        stompClient.subscribe('/topic/drag/start', (msg) => {
+            let dragstartUpdate = JSON.parse(msg.body);
+            if(wsSourceId !== dragstartUpdate.eventSource){
+                let eventMsg = { bubbles: true, composed: true, detail: dragstartUpdate };
+                let event = new CustomEvent('drag-start-' + dragstartUpdate.id, eventMsg);
+                document.getElementById(dragstartUpdate.id).dispatchEvent(event);
+            }
+        });
+
         console.log('Connected: ' + frame);
     });
 }
@@ -27,10 +38,10 @@ function disconnect() {
     console.log("Disconnected");
 }
 
-function sendMessage(pos) {
-    pos.eventSource = wsSourceId;
+function sendMessage(topic, msg) {
+    msg.eventSource = wsSourceId;
     console.log("sendMessage from :", wsSourceId);
-    stompClient.send("/app/position", {}, JSON.stringify(pos));
+    stompClient.send(topic, {}, JSON.stringify(msg));
 }
 
 connect();
